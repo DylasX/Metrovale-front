@@ -2,14 +2,14 @@
 import { describe, expect, test } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Chat from '@/chat/components/index';
-import { UserProvider } from '@/shared/context/userContext';
+import { DataProvider } from '@/shared/context/dataContext';
 
 describe('Chat component', () => {
   test('Can render', () => {
     render(
-      <UserProvider>
+      <DataProvider>
         <Chat />
-      </UserProvider>
+      </DataProvider>
     );
     expect(screen.getByText('Connect')).toBeDefined();
   });

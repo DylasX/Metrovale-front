@@ -1,9 +1,9 @@
 import { useContext } from 'react';
-import { UserContext } from '@/shared/context/userContext';
+import { DataContext } from '@/shared/context/dataContext';
 
 // Custom hook to access the context
-export const useUser = () => {
-  const context = useContext(UserContext);
+export const useDataContext = () => {
+  const context = useContext(DataContext);
   if (!context) {
     throw new Error('useUser must be used within a UserProvider');
   }

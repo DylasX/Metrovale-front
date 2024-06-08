@@ -2,18 +2,20 @@ import React, { ReactNode, createContext, useState } from 'react';
 import { User } from '@/shared/interfaces/user';
 
 // Define the shape of the context value
-interface UserContextType {
+interface DataContextType {
   user: User;
+  gameStatus: string;
   updateUser: (newUser: User) => void;
+  updateGameStatus: (status: string) => void;
 }
 
 // Create the context
-export const UserContext = createContext<UserContextType | undefined>(
+export const DataContext = createContext<DataContextType | undefined>(
   undefined
 );
 
 // Provider component
-export const UserProvider: React.FC<{ children: ReactNode }> = ({
+export const DataProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User>({
@@ -25,13 +27,21 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     role: '',
   });
 
+  const [gameStatus, setGameStatus] = useState<string>('');
+
   const updateUser = (newUser: User) => {
     setUser((prev: User) => ({ ...prev, ...newUser }));
   };
 
+  const updateGameStatus = (status: string) => {
+    setGameStatus(status);
+  };
+
   return (
-    <UserContext.Provider value={{ user, updateUser }}>
+    <DataContext.Provider
+      value={{ user, updateUser, gameStatus, updateGameStatus }}
+    >
       {children}
-    </UserContext.Provider>
+    </DataContext.Provider>
   );
 };

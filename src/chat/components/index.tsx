@@ -1,13 +1,13 @@
 import { ChangeEvent, useEffect, useState, KeyboardEvent } from 'react';
 import { socket } from '@/chat/lib/socket';
-import { useUser } from '@/shared/hooks/useUser';
+import { useDataContext } from '@/shared/hooks/useDataContext';
 import { User } from '@/shared/interfaces/user';
 import { Message } from '@/shared/interfaces/messages';
 import { socket as gameSocket } from '@/game/lib/socket';
 
 function Chat() {
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const { updateUser, user } = useUser();
+  const { updateUser, user } = useDataContext();
   const [values, setValues] = useState({
     name: 'Dylas',
     room: 'Default',

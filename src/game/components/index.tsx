@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from 'react';
 import Info from '@/assets/icons/Info.svg?react';
 import Analytics from '@/assets/icons/Analytics.svg?react';
-import { useUser } from '@/shared/hooks/useUser';
+import { useDataContext } from '@/shared/hooks/useDataContext';
 import { socket } from '@/game/lib/socket';
 import { User } from '@/shared/interfaces/user';
 
@@ -12,7 +12,7 @@ const Game: React.FC = () => {
     () => import(`@/assets/images/peep-${random}.svg?react`)
   );
 
-  const { user, updateUser } = useUser();
+  const { user, updateUser } = useDataContext();
 
   useEffect(() => {
     function onUserInfo(data: User) {
