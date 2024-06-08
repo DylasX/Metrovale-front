@@ -17,13 +17,16 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User>({
-    id: 0,
+    chatId: 0,
+    gameId: 0,
     name: '',
     room: '',
+    isAdmin: false,
+    role: '',
   });
 
   const updateUser = (newUser: User) => {
-    setUser(newUser);
+    setUser((prev: User) => ({ ...prev, ...newUser }));
   };
 
   return (

@@ -1,7 +1,9 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import Info from '@/assets/icons/Info.svg?react';
 import Analytics from '@/assets/icons/Analytics.svg?react';
 import { useUser } from '@/shared/hooks/useUser';
+import { socket } from '@/game/lib/socket';
+import { User } from '@/shared/interfaces/user';
 
 const Game: React.FC = () => {
   //import svg dinamically from assets/images using random number between 1 and 105
@@ -10,7 +12,19 @@ const Game: React.FC = () => {
     () => import(`@/assets/images/peep-${random}.svg?react`)
   );
 
-  const { user } = useUser();
+  const { user, updateUser } = useUser();
+
+  useEffect(() => {
+    function onUserInfo(data: User) {
+      updateUser(data);
+    }
+
+    socket.on('userInfo', onUserInfo);
+
+    return () => {
+      socket.off('userInfo', onUserInfo);
+    };
+  }, [updateUser]);
 
   if (!user.name || !user.room) {
     return (
@@ -42,7 +56,7 @@ const Game: React.FC = () => {
 
       <div className='flex flex-row mt-2 h-3/4 md:h-1/4 border-2 border-r-4 border-b-4 border-black shadow-neobrutalism rounded-sm px-10 py-5 relative bg-zinc-50'>
         <div className='absolute top-0 left-0 w-full h-50 bg-teal-600 h-10 border-b-black border-b-2'></div>
-        <div className='avatar w-2/5 md:w-[150px] min-h-0 md:min-h-[200px] border-2 border-black mt-10 rounded-sm relative bg-slate-100'>
+        <div className='avatar w-2/5 md:w-1/12  min-h-0  border-2 border-black mt-10 rounded-sm relative bg-slate-100'>
           <Suspense fallback={<></>}>
             <Avatar className='w-full h-full rounded-sm text-re' />
           </Suspense>
@@ -59,7 +73,25 @@ const Game: React.FC = () => {
       </div>
       <div className='flex flex-row mt-2 min-h-56 h-full border-2 border-r-4 border-b-4 border-black shadow-neobrutalism rounded-sm px-10 py-5 relative bg-zinc-50'>
         <div className='absolute top-0 left-0 w-full h-50 bg-teal-600 h-10 border-b-black border-b-2'></div>
-        <div className='info flex-grow mb-4'></div>
+        <div className='info flex-grow mb-4 mt-12'>
+          {user.isAdmin ? (
+            <button
+              className={`rounded-md  
+            bg-black ml-auto mb-4 
+            -translate-x-0
+            bg-black-400  md:translate-x-0`}
+              data-testid='startGame'
+            >
+              <span
+                className={`block font-black uppercase -translate-y-2 rounded-md border-2 border-black  p-2 text-lg hover:-translate-y-3 -translate-x-2 active:translate-x-0 active:translate-y-0 transition-all bg-teal-600`}
+              >
+                {'Start game'}
+              </span>
+            </button>
+          ) : (
+            <span>Waiting host to start game...</span>
+          )}
+        </div>
       </div>
     </section>
   );

@@ -3,6 +3,7 @@ import { socket } from '@/chat/lib/socket';
 import { useUser } from '@/shared/hooks/useUser';
 import { User } from '@/shared/interfaces/user';
 import { Message } from '@/shared/interfaces/messages';
+import { socket as gameSocket } from '@/game/lib/socket';
 
 function Chat() {
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -48,7 +49,7 @@ function Chat() {
     }
 
     function onUserInfo(data: User) {
-      updateUser({ ...data });
+      updateUser(data);
     }
 
     socket.on('connect', onConnect);
@@ -116,8 +117,10 @@ function Chat() {
         onClick={() => {
           try {
             socket.connect();
+            gameSocket.connect();
             scrollTo(0, 0);
             socket.emit('join', { room: values.room, name: values.name });
+            gameSocket.emit('join', { room: values.room, name: values.name });
           } catch (error) {
             console.error(error);
           }
